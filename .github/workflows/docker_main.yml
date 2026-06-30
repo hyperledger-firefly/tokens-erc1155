@@ -18,7 +18,7 @@ jobs:
       - name: Set build tag
         id: build_tag_generator
         run: |
-          RELEASE_TAG=$(curl https://api.github.com/repos/hyperledger/firefly-tokens-erc1155/releases/latest -s | jq .tag_name -r)
+          RELEASE_TAG=$(curl https://api.github.com/repos/hyperledger-firefly/tokens-erc1155/releases/latest -s | jq .tag_name -r)
           BUILD_TAG=$RELEASE_TAG-$(date +"%Y%m%d")-$GITHUB_RUN_NUMBER
           echo ::set-output name=BUILD_TAG::$BUILD_TAG
 
@@ -30,20 +30,20 @@ jobs:
             --label tag=${{ steps.build_tag_generator.outputs.BUILD_TAG }} \
             --build-arg BASE_IMAGE=node:22-alpine3.19 \
             --build-arg BUILD_IMAGE=node:22-alpine3.19 \
-            --tag ghcr.io/hyperledger/firefly-tokens-erc1155:${{ steps.build_tag_generator.outputs.BUILD_TAG }} .
+            --tag ghcr.io/hyperledger-firefly/tokens-erc1155:${{ steps.build_tag_generator.outputs.BUILD_TAG }} .
 
       - name: Tag release
         if: github.event.pull_request.merged == true
-        run: docker tag ghcr.io/hyperledger/firefly-tokens-erc1155:${{ steps.build_tag_generator.outputs.BUILD_TAG }} ghcr.io/hyperledger/firefly-tokens-erc1155:head
+        run: docker tag ghcr.io/hyperledger-firefly/tokens-erc1155:${{ steps.build_tag_generator.outputs.BUILD_TAG }} ghcr.io/hyperledger-firefly/tokens-erc1155:head
 
       - name: Push docker image
         if: github.event.pull_request.merged == true
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-          docker push ghcr.io/hyperledger/firefly-tokens-erc1155:${{ steps.build_tag_generator.outputs.BUILD_TAG }}
+          docker push ghcr.io/hyperledger-firefly/tokens-erc1155:${{ steps.build_tag_generator.outputs.BUILD_TAG }}
 
       - name: Push head tag
         if: github.event.pull_request.merged == true
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-          docker push ghcr.io/hyperledger/firefly-tokens-erc1155:head
+          docker push ghcr.io/hyperledger-firefly/tokens-erc1155:head

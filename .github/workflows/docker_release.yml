@@ -23,26 +23,26 @@ jobs:
             --label tag=${GITHUB_REF##*/} \
             --build-arg BASE_IMAGE=node:22-alpine3.19 \
             --build-arg BUILD_IMAGE=node:22-alpine3.19 \
-            --tag ghcr.io/hyperledger/firefly-tokens-erc1155:${GITHUB_REF##*/} \
-            --tag ghcr.io/hyperledger/firefly-tokens-erc1155:head \
+            --tag ghcr.io/hyperledger-firefly/tokens-erc1155:${GITHUB_REF##*/} \
+            --tag ghcr.io/hyperledger-firefly/tokens-erc1155:head \
             .
 
       - name: Tag release
         if: github.event.action == 'released'
-        run: docker tag ghcr.io/hyperledger/firefly-tokens-erc1155:${GITHUB_REF##*/} ghcr.io/hyperledger/firefly-tokens-erc1155:latest
+        run: docker tag ghcr.io/hyperledger-firefly/tokens-erc1155:${GITHUB_REF##*/} ghcr.io/hyperledger-firefly/tokens-erc1155:latest
 
       - name: Push docker image
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-          docker push ghcr.io/hyperledger/firefly-tokens-erc1155:${GITHUB_REF##*/}
+          docker push ghcr.io/hyperledger-firefly/tokens-erc1155:${GITHUB_REF##*/}
 
       - name: Push head tag
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-          docker push ghcr.io/hyperledger/firefly-tokens-erc1155:head
+          docker push ghcr.io/hyperledger-firefly/tokens-erc1155:head
 
       - name: Push latest tag
         if: github.event.action == 'released'
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-          docker push ghcr.io/hyperledger/firefly-tokens-erc1155:latest
+          docker push ghcr.io/hyperledger-firefly/tokens-erc1155:latest
