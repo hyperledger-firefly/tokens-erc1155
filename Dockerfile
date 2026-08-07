@@ -17,7 +17,7 @@ RUN npm install
 ADD . .
 RUN npm run build
 
-FROM alpine:3.19 AS sbom
+FROM alpine:3.24 AS sbom
 WORKDIR /
 ADD . /SBOM
 RUN apk add --no-cache curl 
